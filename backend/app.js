@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const TraineeRoute = require('./Routes/TraineeRoute');
+const LoginRoute = require('./Routes/LoginRoute');
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 // Routes
 app.use('/trainees', TraineeRoute);
+app.use('/login', LoginRoute);
 
 
 // MongoDB connection
