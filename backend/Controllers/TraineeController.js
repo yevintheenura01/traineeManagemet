@@ -2,11 +2,14 @@ const Trainee = require('../Models/TraineeModel');
 const fs = require('fs');
 const path = require('path');
 const { Parser } = require('json2csv'); // Library to convert JSON to CSV
+const bcrypt = require('bcrypt');
 
 // Add Trainee
 const addTrainee = async (req, res) => {
     try {
-        const trainee = new Trainee(req.body);
+        const { password, ...traineeData } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const trainee = new Trainee({ ...traineeData, password: hashedPassword });
         await trainee.save();
         res.status(201).json({
             message: 'Trainee added successfully',
