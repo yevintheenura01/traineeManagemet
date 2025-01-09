@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 
 const traineeSchema = new mongoose.Schema({
-    id:{
+    _id:{
         type:String,
         required:true
     },
-    name:{
+    firstName:{
+        type:String,
+        required:true
+    },
+    lastName:{
         type:String,
         required:true
     },
@@ -62,7 +66,7 @@ const traineeSchema = new mongoose.Schema({
         required:true
     }
 
-});
+},{_id:false});
 
 
 module.exports = mongoose.model('Trainee', traineeSchema);
