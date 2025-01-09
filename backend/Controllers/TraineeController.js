@@ -39,6 +39,20 @@ const getTrainees = async (req, res) => {
     }
 };
 
+// Get Trainee by ID
+const getTraineeById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const trainee = await Trainee.findById(id);
+        if (!trainee) {
+            return res.status(404).json({ message: 'Trainee not found' });
+        }
+        res.status(200).json(trainee);
+    } catch (error) {
+        res.status(400).json({ message: 'Error fetching trainee', error: error.message });
+    }
+};
+
 // Delete Trainee
 const deleteTrainee = async (req, res) => {
     try {
@@ -155,3 +169,4 @@ exports.exportAllTrainees = exportAllTrainees;
 exports.exportActiveTrainees = exportActiveTrainees;
 exports.deleteTrainee = deleteTrainee;
 exports.updateTrainee = updateTrainee;
+exports.getTraineeById = getTraineeById;

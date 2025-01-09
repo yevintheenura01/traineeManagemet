@@ -37,12 +37,18 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid password" });
         }
 
+        // Check if the name contains both first and last names
+        if (!user.firstName || !user.lastName) {
+            return res.status(400).json({ message: "Account name must include both first name and last name" });
+        }
+        
         // User login successful
         return res.status(200).json({
             message: "Login successful",
             userID: user.userID,
             role: "user",
-            name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email
         });
 

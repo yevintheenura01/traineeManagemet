@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const TraineeRoute = require('./Routes/TraineeRoute');
 const LoginRoute = require('./Routes/LoginRoute');
+const AttendanceRoute = require('./Routes/attendanceRoutes');
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.use(express.json());
 // Routes
 app.use('/trainees', TraineeRoute);
 app.use('/login', LoginRoute);
-
+app.use('/api', AttendanceRoute);
 
 // MongoDB connection
 mongoose

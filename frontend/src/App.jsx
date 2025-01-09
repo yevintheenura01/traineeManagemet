@@ -5,7 +5,12 @@ import Display from './components/Supervisor/DisplayTrainees';
 import Login from './components/Login/Login';
 import InternDashboard from './components/Intern/InternDashboard';
 import Dashboard from './components/Supervisor/Dashboard';
-import Attendance from './components/Supervisor/Attendance';
+import SupAttendance from './components/Supervisor/SupAttendance';
+import EditTrainee from './components/Supervisor/EditTrainee';
+
+import Attendance from './components/Intern/Attendance ';
+import InternsProfile from './components/Intern/Profile';
+import RequestLeave from './components/Intern/Requestleave';
 
 const App=()=> {
 
@@ -17,11 +22,13 @@ const App=()=> {
       <Route path="/display" element={<Display />} />
       <Route path="/create" element={<Create />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/attendance" element={<Attendance />} />
+      <Route path="/supAttendance" element={<SupAttendance />} />
+      <Route path="/edit/:id" element={<EditTrainee />} />
 
       <Route path="/intern-dashboard" element={<InternDashboard />} />
-      
-
+      <Route path="/InternsProfile" element={<InternsProfile />} />
+      <Route path="/Requestleave" element={<RequestLeave />} />
+      <Route path="/attendance" element={<Attendance />} />
     </Routes>
    </Router>
   );

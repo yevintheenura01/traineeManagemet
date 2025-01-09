@@ -35,10 +35,12 @@ const Login = () => {
       );
 
       if (response.status === 200) {
-        const { userID,role } = response.data;
+        const { userID,role,firstName,lastName } = response.data;
         // Store userID and role in localStorage
         localStorage.setItem("userID", userID);
         localStorage.setItem("role", role);
+        localStorage.setItem("firstName", firstName); // Store firstName
+        localStorage.setItem("lastName", lastName);
 
         // Navigate based on role
         if (role === "admin") {
