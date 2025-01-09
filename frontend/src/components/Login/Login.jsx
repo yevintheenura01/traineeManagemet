@@ -42,7 +42,7 @@ const Login = () => {
 
         // Navigate based on role
         if (role === "admin") {
-          navigate("/display");
+          navigate("/dashboard");
         } else {
           navigate("/intern-dashboard");
         }
@@ -59,7 +59,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-black">
+    <div className="flex justify-center items-center h-screen" style={{ backgroundColor: "#0156a6" }}>
       <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-0 flex">
         {/* Left Side with Image */}
         <div className="w-1/2 hidden md:block">
@@ -90,9 +90,10 @@ const Login = () => {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-lg text-gray-700 bg-black text-white focus:outline-none focus:border-gray-500"
+                className="w-full px-3 py-2 border rounded-lg text-white bg-black focus:outline-none focus:border-gray-500 " 
                 placeholder="Enter your email"
                 required
+                style={{ backgroundColor: "#0156a6" }}
               />
             </div>
             <div className="mb-10 text-left">
@@ -108,9 +109,10 @@ const Login = () => {
                 id="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-lg text-gray-700 bg-black text-white focus:outline-none focus:border-gray-500"
+                className="w-full px-3 py-2 border rounded-lg text-white bg-black  focus:outline-none focus:border-gray-500"
                 placeholder="Enter your password"
                 required
+                style={{ backgroundColor: "#0156a6" }}
               />
             </div>
             <div className="flex items-center justify-between">

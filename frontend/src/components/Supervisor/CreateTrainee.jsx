@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import MenuBar from './MenuBar';
 
 const initialState = {
   id: '',
-  name: '',
+  firstName: '',
+  lastName: '',
   mobile: '',
   nic: '',
   email: '',
@@ -22,7 +23,6 @@ const initialState = {
 
 const CreateTrainee = () => {
   const [formData, setFormData] = useState(initialState);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,7 +34,7 @@ const CreateTrainee = () => {
       const response = await axios.post('http://localhost:5000/trainees', formData);
       if (response.status === 201) {
         alert('Trainee created successfully');
-        navigate('/');
+        setFormData(initialState);
       } else {
         throw new Error('Failed to create trainee');
       }
@@ -44,7 +44,9 @@ const CreateTrainee = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center items-center px-6 py-12">
+    <div className='flex'>
+    <MenuBar />
+    <div className="flex-1 min-h-screen bg-gray-50 flex justify-center items-center px-6 py-12">
       <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg">
         <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-6 rounded-t-lg">
           <h2 className="text-3xl font-bold text-center">Create Trainee</h2>
@@ -54,7 +56,8 @@ const CreateTrainee = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               { label: 'Trainee ID', name: 'id', type: 'text' },
-              { label: 'Trainee Name', name: 'name', type: 'text' },
+              { label: 'Trainee First Name', name: 'firstName', type: 'text' },
+              { label: 'Trainee Last Name', name: 'lastName', type: 'text' },
               { label: 'Mobile', name: 'mobile', type: 'text' },
               { label: 'NIC', name: 'nic', type: 'text' },
               { label: 'Email', name: 'email', type: 'email' },
@@ -118,6 +121,7 @@ const CreateTrainee = () => {
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 };

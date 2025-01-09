@@ -7,9 +7,14 @@ const bcrypt = require('bcrypt');
 // Add Trainee
 const addTrainee = async (req, res) => {
     try {
+        const lastTrainee = await Trainee.findOne().sort({ _id: -1 }); // Sort by _id descending
+        const newId = lastTrainee
+            ? `T${String(parseInt(lastTrainee._id.substring(1)) + 1).padStart(3, '0')}`
+            : 'T001'; // Start from T001 if no trainees exist
+
         const { password, ...traineeData } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const trainee = new Trainee({ ...traineeData, password: hashedPassword });
+        const trainee = new Trainee({ _id: newId, ...traineeData, password: hashedPassword });
         await trainee.save();
         res.status(201).json({
             message: 'Trainee added successfully',
@@ -23,6 +28,7 @@ const addTrainee = async (req, res) => {
     }
 };
 
+
 // Get all trainees
 const getTrainees = async (req, res) => {
     try {
@@ -33,11 +39,48 @@ const getTrainees = async (req, res) => {
     }
 };
 
+// Delete Trainee
+const deleteTrainee = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const trainee = await Trainee.findByIdAndDelete(id);
+        if (!trainee) {
+            return res.status(404).json({ message: 'Trainee not found' });
+        }
+        res.status(200).json({ message: 'Trainee deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ message: 'Error deleting trainee', error: error.message });
+    }
+};
+
+
+
+// Update Trainee
+const updateTrainee = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { password, ...traineeData } = req.body;
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            traineeData.password = hashedPassword;
+        }
+        const updatedTrainee = await Trainee.findByIdAndUpdate(id, traineeData, { new: true });
+        res.status(200).json({
+            message: 'Trainee updated successfully',
+            trainee: updatedTrainee,
+        });
+    } catch (error) {
+        res.status(400).json({ message: 'Error updating trainee', error: error.message });
+    }
+};
+
+
+
 // Export all trainees to CSV
 const exportAllTrainees = async (req, res) => {
     try {
         const trainees = await Trainee.find();
-        const fields = ['id', 'name', 'mobile', 'nic', 'email', 'mobile', 'address', 'trainingStartDate', 'trainingEndDate', 'institute', 'languages', 'specializations', 'supervisor', 'assignedWork', 'targetDate' ]; 
+        const fields = ['id','firstName' ,'lastName', 'mobile', 'nic', 'email', 'mobile', 'address', 'trainingStartDate', 'trainingEndDate', 'institute', 'languages', 'specializations', 'supervisor', 'assignedWork', 'targetDate' ]; 
         const json2csvParser = new Parser({ fields });
         const csv = json2csvParser.parse(trainees);
 
@@ -65,7 +108,7 @@ const exportActiveTrainees = async (req, res) => {
             trainingEndDate: { $gte: currentDate.toISOString() }
         });
         
-        const fields = ['id', 'name', 'email', 'mobile', 'address', 'trainingEndDate']; // Customize the fields
+        const fields = ['id', 'firstName', 'email', 'mobile', 'address', 'trainingEndDate']; // Customize the fields
         const json2csvParser = new Parser({ fields });
         const csv = json2csvParser.parse(activeTrainees);
 
@@ -84,7 +127,31 @@ const exportActiveTrainees = async (req, res) => {
     }
 };
 
+const getDashboardData = async (req, res) => {
+    try {
+      const totalTrainees = await Trainee.countDocuments();
+      const categories = await Trainee.aggregate([
+        { $unwind: "$specializations" },
+        {
+          $group: {
+            _id: "$specializations",
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { count: -1 } }, // Sort by count in descending order
+      ]);
+  
+      res.status(200).json({ totalTrainees, categories });
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching dashboard data', error: error.message });
+    }
+  };
+  
+
+exports.getDashboardData = getDashboardData; 
 exports.addTrainee = addTrainee;
 exports.getTrainees = getTrainees;
 exports.exportAllTrainees = exportAllTrainees;
 exports.exportActiveTrainees = exportActiveTrainees;
+exports.deleteTrainee = deleteTrainee;
+exports.updateTrainee = updateTrainee;
